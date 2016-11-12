@@ -121,15 +121,10 @@ var CONTACT_TEMPLATE = {
             this.props.onNewContactChange(value);
         },
         render: function() {
-            var Contacts = this.props.contacts
-                .map(function(c) {
-                    return React.createElement(Contact, c);
-                });
-
             return (
                 React.createElement('div', {},
                     React.createElement('h1', {}, 'Contacts'),
-                    React.createElement('ul', {}, Contacts),
+                    React.createElement('ul', {}, this.props.contacts.map(React.createElement.bind(null, Contact))),
                     React.createElement(ContactForm, {
                         value: this.props.newContact,
                         onChange: this.onFormChange,
