@@ -2,7 +2,7 @@ var CONTACT_TEMPLATE = {
         name: '',
         email: '',
         description: '',
-        errors: null
+        errors: {}
     },
     contacts = [
         {
@@ -63,7 +63,6 @@ var CONTACT_TEMPLATE = {
             this.props.onChange(this.props.value);
         },
         render: function() {
-            var errors = this.props.value.errors || {}
             return (
                 React.createElement('form', {
                     className: 'ContactForm',
@@ -71,16 +70,19 @@ var CONTACT_TEMPLATE = {
                 },
                     React.createElement('input', {
                         type: 'text',
+                        ref: 'name',
                         value: this.props.value.name,
                         placeholder: 'Name',
-                        className: errors.name && 'ContactForm-error',
-                        onChange: this.onNameChange
+                        className: this.props.value.errors.name && 'ContactForm-error',
+                        onChange: this.onNameChange,
+                        autoFocus: true
                     }),
                     React.createElement('input', {
                         type: 'email',
+                        ref: 'email',
                         value: this.props.value.email,
                         placeholder: 'Email',
-                        className: errors.email && 'ContactForm-error',
+                        className: this.props.value.errors.email && 'ContactForm-error',
                         onChange: this.onEmailChange
                     }),
                     React.createElement('textarea', {
@@ -93,6 +95,19 @@ var CONTACT_TEMPLATE = {
                     }, 'Submit')
                 )
             );
+        },
+        componentDidUpdate: function(prevProps) {
+            if (Object.keys(this.props.value.errors).length) {
+                if (this.props.value.errors.name) {
+                    this.refs.name.focus();
+                    return;
+                }
+
+                if (this.props.value.errors.email) {
+                    this.refs.email.focus();
+                    return;
+                }
+            }
         }
     }),
     ContactAppView = React.createClass({
