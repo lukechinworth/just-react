@@ -36,36 +36,46 @@ var contacts = [
     ContactForm = React.createClass({
         propTypes: {
             value: React.PropTypes.object.isRequired,
-            onChange: React.PropTypes.func.isRequired
+            onChange: React.PropTypes.func.isRequired,
+            onSubmit: React.PropTypes.func.isRequired
+        },
+        onFormSubmit: function(e) {
+            e.preventDefault();
+            this.props.onSubmit();
+        },
+        onNameChange: function(e) {
+            this.props.value.name = e.target.value;
+            this.props.onChange(this.props.value);
+        },
+        onEmailChange: function(e) {
+            this.props.value.email = e.target.value;
+            this.props.onChange(this.props.value);
+        },
+        onDescriptionChange: function(e) {
+            this.props.value.description = e.target.value;
+            this.props.onChange(this.props.value);
         },
         render: function() {
             return (
-                React.createElement('form', {},
+                React.createElement('form', {
+                    onSubmit: this.onFormSubmit
+                },
                     React.createElement('input', {
                         type: 'text',
                         value: this.props.value.name,
                         placeholder: 'Name',
-                        onChange: function(syntheticEvent) {
-                            this.props.value.name = syntheticEvent.target.value;
-                            this.props.onChange(this.props.value);
-                        }.bind(this)
+                        onChange: this.onNameChange
                     }),
                     React.createElement('input', {
                         type: 'email',
                         value: this.props.value.email,
                         placeholder: 'Email',
-                        onChange: function(syntheticEvent) {
-                            this.props.value.email = syntheticEvent.target.value;
-                            this.props.onChange(this.props.value);
-                        }.bind(this)
+                        onChange: this.onEmailChange
                     }),
                     React.createElement('textarea', {
                         value: this.props.value.description,
                         placeholder: 'Description',
-                        onChange: function(syntheticEvent) {
-                            this.props.value.description = syntheticEvent.target.value;
-                            this.props.onChange(this.props.value);
-                        }.bind(this)
+                        onChange: this.onDescriptionChange
                     }),
                     React.createElement('button', {
                         type: 'submit'
@@ -74,9 +84,13 @@ var contacts = [
             );
         }
     }),
-    ContactView = React.createClass({
+    ContactAppView = React.createClass({
         propTypes: {
-            onContactChange: React.PropTypes.func.isRequired
+            onNewContactChange: React.PropTypes.func.isRequired,
+            onContactFormSubmit: React.PropTypes.func.isRequired
+        },
+        onFormChange: function(value) {
+            this.props.onNewContactChange(value);
         },
         render: function() {
             var Contacts = this.props.contacts
@@ -93,22 +107,41 @@ var contacts = [
                     React.createElement('ul', {}, Contacts),
                     React.createElement(ContactForm, {
                         value: this.props.newContact,
-                        onChange: function(value) {
-                            this.props.onContactChange(value);
-                        }.bind(this)
+                        onChange: this.onFormChange,
+                        onSubmit: this.props.onContactFormSubmit
                     })
                 )
             );
         }
-    });
-
-ReactDOM.render(
-    React.createElement(ContactView, {
-        contacts: contacts,
-        newContact: {},
-        onContactChange: function(contact) {
-            console.log(contact);
-        }
     }),
-    document.getElementById('react-app')
-);
+    state = {};
+
+setState({
+    contacts: contacts,
+    newContact: {}
+});
+
+function setState(newState) {
+    Object.assign(state, newState);
+
+    ReactDOM.render(
+        React.createElement(ContactAppView, Object.assign({}, state, {
+            onNewContactChange: updateNewContact,
+            onContactFormSubmit: submitNewContact
+        })),
+        document.getElementById('react-app')
+    );
+}
+
+function updateNewContact(contact) {
+    setState({ newContact: contact });
+}
+
+function submitNewContact() {
+    state.newContact.key = state.contacts.length + 1;
+    
+    setState({
+        contacts: state.contacts.concat(state.newContact),
+        newContact: {}
+    });
+}
