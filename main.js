@@ -39,7 +39,7 @@ var contacts = [
             onChange: React.PropTypes.func.isRequired,
             onSubmit: React.PropTypes.func.isRequired
         },
-        onFormSubmit: function(e) {
+        onSubmit: function(e) {
             e.preventDefault();
             this.props.onSubmit();
         },
@@ -58,7 +58,7 @@ var contacts = [
         render: function() {
             return (
                 React.createElement('form', {
-                    onSubmit: this.onFormSubmit
+                    onSubmit: this.onSubmit
                 },
                     React.createElement('input', {
                         type: 'text',
@@ -138,8 +138,12 @@ function updateNewContact(contact) {
 }
 
 function submitNewContact() {
-    state.newContact.key = state.contacts.length + 1;
+    if (!state.newContact.name || !state.newContact.email) {
+        return;
+    }
     
+    state.newContact.key = state.contacts.length + 1;
+
     setState({
         contacts: state.contacts.concat(state.newContact),
         newContact: {}
