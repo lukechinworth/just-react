@@ -7,19 +7,20 @@ var CONTACT_TEMPLATE = {
     contacts = [
         {
             key: 1,
-            name: "James K Nelson",
-            email: "james@jamesknelson.com",
-            description: "Front-end Unicorn"
+            name: "Bob",
+            email: "bob@bbb.com",
+            description: "Developer"
         },
         {
             key: 2,
             name: "Jim",
-            email: "jim@example.com"
+            email: "jim@jim.com",
+            description: "Manager"
         },
         {
             key: 3,
             name: "Joe",
-            email: "joe@mail.com"
+            email: "joe@joe.com"
         }
     ],
     Contact = React.createClass({
