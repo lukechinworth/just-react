@@ -183,7 +183,7 @@ function submitNewContact() {
         }
         : {
             newContact: contact
-        }
+        };
 
     setState(newState);
 }
