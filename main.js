@@ -1,4 +1,7 @@
-var CONTACT_TEMPLATE = {
+var el = React.createElement,
+    cl = React.createClass,
+    pt = React.PropTypes,
+    CONTACT_TEMPLATE = {
         name: '',
         email: '',
         description: '',
@@ -23,29 +26,29 @@ var CONTACT_TEMPLATE = {
             email: "joe@joe.com"
         }
     ],
-    Contact = React.createClass({
+    Contact = cl({
         render: function() {
             return (
-                React.createElement('li', {className:'Contact'},
-                    React.createElement('h2', {
+                el('li', {className:'Contact'},
+                    el('h2', {
                         className:'Contact-name'
                     }, this.props.name),
-                    React.createElement('a', {
+                    el('a', {
                         href:'mailto:' + this.props.email,
                         className: 'Contact-email'
                     }, this.props.email),
-                    React.createElement('p', {
+                    el('p', {
                         className: 'Contact-description'
                     }, this.props.description)
                 )
             );
         }
     }),
-    ContactForm = React.createClass({
+    ContactForm = cl({
         propTypes: {
-            value: React.PropTypes.object.isRequired,
-            onChange: React.PropTypes.func.isRequired,
-            onSubmit: React.PropTypes.func.isRequired
+            value: pt.object.isRequired,
+            onChange: pt.func.isRequired,
+            onSubmit: pt.func.isRequired
         },
         onSubmit: function(e) {
             e.preventDefault();
@@ -65,11 +68,11 @@ var CONTACT_TEMPLATE = {
         },
         render: function() {
             return (
-                React.createElement('form', {
+                el('form', {
                     className: 'ContactForm',
                     onSubmit: this.onSubmit
                 },
-                    React.createElement('input', {
+                    el('input', {
                         type: 'text',
                         ref: 'name',
                         value: this.props.value.name,
@@ -78,7 +81,7 @@ var CONTACT_TEMPLATE = {
                         onChange: this.onNameChange,
                         autoFocus: true
                     }),
-                    React.createElement('input', {
+                    el('input', {
                         type: 'email',
                         ref: 'email',
                         value: this.props.value.email,
@@ -86,12 +89,12 @@ var CONTACT_TEMPLATE = {
                         className: this.props.value.errors.email && 'ContactForm-error',
                         onChange: this.onEmailChange
                     }),
-                    React.createElement('textarea', {
+                    el('textarea', {
                         value: this.props.value.description,
                         placeholder: 'Description',
                         onChange: this.onDescriptionChange
                     }),
-                    React.createElement('button', {
+                    el('button', {
                         type: 'submit'
                     }, 'Submit')
                 )
@@ -111,22 +114,22 @@ var CONTACT_TEMPLATE = {
             }
         }
     }),
-    ContactAppView = React.createClass({
+    ContactAppView = cl({
         propTypes: {
-            contacts: React.PropTypes.array.isRequired,
-            newContact: React.PropTypes.object.isRequired,
-            onNewContactChange: React.PropTypes.func.isRequired,
-            onContactFormSubmit: React.PropTypes.func.isRequired
+            contacts: pt.array.isRequired,
+            newContact: pt.object.isRequired,
+            onNewContactChange: pt.func.isRequired,
+            onContactFormSubmit: pt.func.isRequired
         },
         onFormChange: function(value) {
             this.props.onNewContactChange(value);
         },
         render: function() {
             return (
-                React.createElement('div', {},
-                    React.createElement('h1', {}, 'Contacts'),
-                    React.createElement('ul', {}, this.props.contacts.map(React.createElement.bind(null, Contact))),
-                    React.createElement(ContactForm, {
+                el('div', {},
+                    el('h1', {}, 'Contacts'),
+                    el('ul', {}, this.props.contacts.map(el.bind(null, Contact))),
+                    el(ContactForm, {
                         value: this.props.newContact,
                         onChange: this.onFormChange,
                         onSubmit: this.props.onContactFormSubmit
@@ -146,7 +149,7 @@ function setState(newState) {
     Object.assign(state, newState);
 
     ReactDOM.render(
-        React.createElement(ContactAppView, Object.assign({}, state, {
+        el(ContactAppView, Object.assign({}, state, {
             onNewContactChange: updateNewContact,
             onContactFormSubmit: submitNewContact
         })),
