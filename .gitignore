@@ -1,3 +1,5 @@
 .idea/
 .DS_Store
-node_modules
+node_modules/
+!node_modules/react/dist/react.min.js
+!node_modules/react-dom/dist/react-dom.min.js
